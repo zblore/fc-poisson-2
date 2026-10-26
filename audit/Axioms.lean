@@ -1,0 +1,38 @@
+/-
+Copyright (c) 2026 Zayn Blore. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Zayn Blore
+-/
+import Poisson2
+
+/-!
+# Axioms of the main results
+
+Fails if any main result comes to depend on anything beyond Lean's three standard axioms.
+-/
+
+/-- info: 'Poisson2.fc_dimension_two' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Poisson2.fc_dimension_two
+
+/--
+info: 'Poisson2.fc_dimension_ge_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms Poisson2.fc_dimension_ge_two
+
+/--
+info: 'Poisson2.fc_poisson_conjecture' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms Poisson2.fc_poisson_conjecture
+
+/-- info: 'Poisson2.pderiv_aeval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Poisson2.pderiv_aeval
+
+/--
+info: 'Poisson2.poissonBracket_rename' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms Poisson2.poissonBracket_rename

@@ -1,0 +1,139 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+
+version: "v0.4"
+
+project:
+  name: "fc-poisson-2"
+  description: >-
+    A machine-checked proof that the Poisson conjecture fails for two canonical pairs, and hence
+    for every n >= 2, against the definitions of Formal Conjectures' PoissonConjecture.lean
+    (arXiv math/0608009), following the explicit counterexample of C. D. Long (2026).
+  authors:
+    - "Zayn Blore"
+  license: "Apache-2.0"
+
+sources:
+  - title: "An Explicit Counterexample to the Rank-Two Poisson Conjecture"
+    authors:
+      - "Christopher D. Long"
+    id: "https://arxiv.org/abs/2608.23777"
+    type: "preprint"
+    location: "Sections 3-5, 7 and 8: Theorem 1.1 (the non-automorphism part), Corollary 8.1"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+
+related_formalizations:
+  - id: "https://github.com/google-deepmind/formal-conjectures/blob/09215996126bf40899be6cbe826d6f53a6b2ae35/FormalConjectures/Arxiv/math.0608009/PoissonConjecture.lean"
+    relationship: "builds-on"
+    note: >-
+      Supplies the statements `poisson_conjecture`, `poisson_conjecture.variants.dimension_two`
+      and `poisson_conjecture.variants.dimension_ge_two`, and every definition they use. This
+      repository depends on Formal Conjectures at that commit and proves the same propositions
+      without using the declarations left as `sorry` there.
+
+classification:
+  arxiv:
+    - "math.RA"
+  msc2020:
+    - "17B63"
+    - "14R15"
+
+automation:
+  methods:
+    - method: "agent"
+      models:
+        - "Claude Opus 5.5"
+      framework: "Claude Code"
+  notes: >-
+    I drafted the Lean with Claude Code, following Long's paper.
+
+review:
+  status: "author-verified"
+  reviewers:
+    - "Zayn Blore"
+  notes: >-
+    Checks run: the three theorems have exactly the types of the Formal Conjectures declarations
+    (checked by `rfl` in `Poisson2/FormalTarget.lean`); they use only propext, Classical.choice
+    and Quot.sound, enforced by `#guard_msgs` in `audit/Axioms.lean`; `audit/Control.lean` checks
+    that the audit detects `sorryAx`, specialises the result to the rationals, and checks the
+    bracket sign and Long's common image. An independent review (gpt-6-astra, 26 Oct 2026) found
+    no soundness problem. A Lean proof over the rationals was reported, unpublished, in Formal
+    Conjectures PR #5451.
+
+status:
+  scope: "Full proofs of three Formal Conjectures statements."
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms:
+    - "propext"
+    - "Classical.choice"
+    - "Quot.sound"
+  main_results:
+    - description: "The Poisson conjecture fails for two canonical pairs."
+      declaration: "Poisson2.fc_dimension_two"
+      file: "Poisson2/FormalTarget.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Classical.choice"
+        - "Quot.sound"
+    - description: "The Poisson conjecture fails for every n >= 2."
+      declaration: "Poisson2.fc_dimension_ge_two"
+      file: "Poisson2/FormalTarget.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Classical.choice"
+        - "Quot.sound"
+    - description: "The Poisson conjecture is false."
+      declaration: "Poisson2.fc_poisson_conjecture"
+      file: "Poisson2/FormalTarget.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Classical.choice"
+        - "Quot.sound"
+    - description: "The chain rule for partial derivatives of a substitution."
+      declaration: "Poisson2.pderiv_aeval"
+      file: "Poisson2/ChainRule.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Classical.choice"
+        - "Quot.sound"
+
+fidelity:
+  divergences: >-
+    None in the statements, which are Formal Conjectures' own. Formal Conjectures' bracket has
+    {X_i, X_(i+n)} = 1, the opposite sign to Long's {p, x} = 1; with x, q, p, z = X_1, X_2, X_3, X_4
+    the map X_1, X_2, X_3, X_4 -> R, T, D, S is a Poisson endomorphism for Formal Conjectures'
+    bracket, as its docstring states. The six identities are proved in Long's source coordinates
+    (x, y, beta, D_0); the change to those coordinates is not itself formalised as an
+    automorphism, because the proof does not need it. Of Long's Theorem 1.1 only the
+    non-automorphism is formalised, using two points of his fibre; the determinant-one claim and
+    the exactness of the three-point fibre are not.
+
+alignment:
+  namespaces:
+    - "Poisson2"
+  statements:
+    - source: "Formal Conjectures, poisson_conjecture.variants.dimension_two"
+      lean: "Poisson2.fc_dimension_two"
+      module: "Poisson2.FormalTarget"
+      status: "proved"
+    - source: "Formal Conjectures, poisson_conjecture.variants.dimension_ge_two"
+      lean: "Poisson2.fc_dimension_ge_two"
+      module: "Poisson2.FormalTarget"
+      status: "proved"
+    - source: "Formal Conjectures, poisson_conjecture"
+      lean: "Poisson2.fc_poisson_conjecture"
+      module: "Poisson2.FormalTarget"
+      status: "proved"
+    - source: "Long (2026), Corollary 8.1"
+      lean: "Poisson2.dimension_ge_two"
+      module: "Poisson2.Padding"
+      status: "proved"
+
+acknowledgements: >-
+  Thanks to the authors of Lean 4, Mathlib and Formal Conjectures, and to Christopher D. Long for
+  a paper whose explicit polynomials and source coordinates made this possible.
