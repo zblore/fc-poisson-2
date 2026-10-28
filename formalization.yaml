@@ -18,7 +18,7 @@ sources:
       - "Christopher D. Long"
     id: "https://arxiv.org/abs/2608.23777"
     type: "preprint"
-    location: "Sections 3-5, 7 and 8: Theorem 1.1 (the non-automorphism part), Corollary 8.1"
+    location: "Sections 3-8: Theorem 1.1 (the non-automorphism part, from the two points of Proposition 7.2), Theorem 5.2, Proposition 6.2, Corollary 8.1 (proved here by a retraction, not Long's irreducibility argument)"
     relationship: "formalizes"
     author_endorsement: "not-contacted"
 
@@ -26,8 +26,9 @@ related_formalizations:
   - id: "https://github.com/google-deepmind/formal-conjectures/blob/09215996126bf40899be6cbe826d6f53a6b2ae35/FormalConjectures/Arxiv/math.0608009/PoissonConjecture.lean"
     relationship: "builds-on"
     note: >-
-      Supplies the statements `poisson_conjecture`, `poisson_conjecture.variants.dimension_two`
-      and `poisson_conjecture.variants.dimension_ge_two`, and every definition they use. This
+      Supplies the statements `poisson_conjecture`, `poisson_conjecture.variants.dimension_two`,
+      `poisson_conjecture.variants.dimension_three` and
+      `poisson_conjecture.variants.dimension_ge_two`, and every definition they use. This
       repository depends on Formal Conjectures at that commit and proves the same propositions
       without using the declarations left as `sorry` there.
 
@@ -48,20 +49,21 @@ automation:
     I drafted the Lean with Claude Code, following Long's paper.
 
 review:
-  status: "author-verified"
+  status: "agent-reviewed"
   reviewers:
     - "Zayn Blore"
   notes: >-
-    Checks run: the three theorems have exactly the types of the Formal Conjectures declarations
+    Checks run: the four theorems have exactly the types of the Formal Conjectures declarations
     (checked by `rfl` in `Poisson2/FormalTarget.lean`); they use only propext, Classical.choice
     and Quot.sound, enforced by `#guard_msgs` in `audit/Axioms.lean`; `audit/Control.lean` checks
     that the audit detects `sorryAx`, specialises the result to the rationals, and checks the
-    bracket sign and Long's common image. An independent review (gpt-6-astra, 26 Oct 2026) found
-    no soundness problem. A Lean proof over the rationals was reported, unpublished, in Formal
-    Conjectures PR #5451.
+    bracket sign and Long's common image. Two AI-model reviews commissioned by the author
+    (OpenAI Astra, Claude Opus 5.5 and Claude Fable 5.1, October 2026; not published) found no
+    soundness problem. A Lean proof over the rationals was reported in Formal Conjectures PR
+    #5451; the PR neither includes nor links it, and I could not find it.
 
 status:
-  scope: "Full proofs of three Formal Conjectures statements."
+  scope: "Full proofs of four Formal Conjectures statements."
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -71,6 +73,14 @@ status:
   main_results:
     - description: "The Poisson conjecture fails for two canonical pairs."
       declaration: "Poisson2.fc_dimension_two"
+      file: "Poisson2/FormalTarget.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Classical.choice"
+        - "Quot.sound"
+    - description: "The Poisson conjecture fails for three canonical pairs (the case n = 3)."
+      declaration: "Poisson2.fc_dimension_three"
       file: "Poisson2/FormalTarget.lean"
       sorry_count: 0
       axioms:
@@ -119,6 +129,10 @@ alignment:
   statements:
     - source: "Formal Conjectures, poisson_conjecture.variants.dimension_two"
       lean: "Poisson2.fc_dimension_two"
+      module: "Poisson2.FormalTarget"
+      status: "proved"
+    - source: "Formal Conjectures, poisson_conjecture.variants.dimension_three"
+      lean: "Poisson2.fc_dimension_three"
       module: "Poisson2.FormalTarget"
       status: "proved"
     - source: "Formal Conjectures, poisson_conjecture.variants.dimension_ge_two"

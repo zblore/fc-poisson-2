@@ -16,6 +16,12 @@ Fails if any main result comes to depend on anything beyond Lean's three standar
 #print axioms Poisson2.fc_dimension_two
 
 /--
+info: 'Poisson2.fc_dimension_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms Poisson2.fc_dimension_three
+
+/--
 info: 'Poisson2.fc_dimension_ge_two' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in

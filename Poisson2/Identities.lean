@@ -71,18 +71,28 @@ macro (name := coordIdentity) "coord_identity" : tactic => `(tactic| (
     eval_X, eval_C]
   ring))
 
-set_option linter.unusedSimpArgs false
-
+set_option linter.unusedSimpArgs false in
+/-- `{R, T} = 0`, in the coordinate variables. -/
 theorem cbr_R_T : cbr K (Rs K) (Ts K) = C 0 := by coord_identity
 
+set_option linter.unusedSimpArgs false in
+/-- `{R, D} = 1`, in the coordinate variables. -/
 theorem cbr_R_D : cbr K (Rs K) (Ds K) = C 1 := by coord_identity
 
+set_option linter.unusedSimpArgs false in
+/-- `{R, S} = 0`, in the coordinate variables. -/
 theorem cbr_R_S : cbr K (Rs K) (Ss K) = C 0 := by coord_identity
 
+set_option linter.unusedSimpArgs false in
+/-- `{T, D} = 0`, in the coordinate variables. -/
 theorem cbr_T_D : cbr K (Ts K) (Ds K) = C 0 := by coord_identity
 
+set_option linter.unusedSimpArgs false in
+/-- `{T, S} = 1`, in the coordinate variables. -/
 theorem cbr_T_S : cbr K (Ts K) (Ss K) = C 1 := by coord_identity
 
+set_option linter.unusedSimpArgs false in
+/-- `{D, S} = 0`, in the coordinate variables. -/
 theorem cbr_D_S : cbr K (Ds K) (Ss K) = C 0 := by coord_identity
 
 end Poisson2

@@ -178,7 +178,8 @@ end Pad
 variable (K : Type*) [Field K] [CharZero K]
 
 /-- **The Poisson conjecture is false for every `n ≥ 2`**: pad Long's rank-two map with identity
-pairs. This is the statement of Formal Conjectures' `poisson_conjecture.variants.dimension_ge_two`.
+pairs. This is the statement of Formal Conjectures' `poisson_conjecture.variants.dimension_ge_two`,
+with `K` explicit.
 -/
 theorem dimension_ge_two (n : ℕ) (hn : 2 ≤ n) : ¬ PoissonConjectureFor K n := fun h =>
   not_surjective_pad (Fin.castLEEmb hn) (φ K) (φ_not_surjective K)

@@ -14,12 +14,14 @@ Long's endomorphism `φ` of `K[x, q, p, z]` sends `X₁, X₂, X₃, X₄ = x, q
 * `isPoissonEndomorphism_φ`: `φ` preserves the canonical bracket on generators, by the six
   identities of `Poisson2.Identities` and the bracket table of `Poisson2.Coordinates`.
 * `φ_not_surjective`: `X₁` is not in the image. The points `(0, 0, 1/24, -1/8)` and
-  `(1, 2/3, 247/96, -89/64)` (Long, Theorem 1.1) have the same image `(0, 1/8, 0, 0)`, so every
-  polynomial in the image of `φ` takes the same value at both, while `X₁` takes `0` and `1`.
+  `(1, 2/3, 247/96, -89/64)` (Long, Theorem 1.1) have the same image (it is `(0, 1/8, 0, 0)`,
+  checked in `audit/Control.lean`), so every polynomial in the image of `φ` takes the same value
+  at both, while `X₁` takes `0` and `1`.
 
 The statements `dimension_two` and `poisson_conjecture` are Formal Conjectures'
 `Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two` and
-`Arxiv.«math.0608009».poisson_conjecture`, verbatim.
+`Arxiv.«math.0608009».poisson_conjecture`, up to `K` being explicit here; the exact restatements
+are in `Poisson2.FormalTarget`.
 -/
 
 namespace Poisson2
@@ -110,12 +112,13 @@ theorem φ_not_surjective : ¬ Function.Surjective (φ K) := by
   simp [P₁, P₂] at h₁
 
 /-- **The Poisson conjecture is false for two canonical pairs** (Long 2026). This is the
-statement of Formal Conjectures' `poisson_conjecture.variants.dimension_two`. -/
+statement of Formal Conjectures' `poisson_conjecture.variants.dimension_two`, with `K`
+explicit. -/
 theorem dimension_two : ¬ PoissonConjectureFor K 2 := fun h =>
   φ_not_surjective K (h (φ K) (isPoissonEndomorphism_φ K)).2
 
 /-- **The Poisson conjecture is false.** This is the statement of Formal Conjectures'
-`poisson_conjecture`. -/
+`poisson_conjecture`, with `K` explicit. -/
 theorem poisson_conjecture : ¬ ∀ n, PoissonConjectureFor K n := fun h =>
   dimension_two K (h 2)
 

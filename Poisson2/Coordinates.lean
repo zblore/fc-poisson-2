@@ -77,7 +77,9 @@ noncomputable def brkBD : MvPolynomial (Fin 4) K :=
 noncomputable def brkYB : MvPolynomial (Fin 4) K :=
   2 - 6 * X 0 * X 1 - 3 * X 0 ^ 2 * X 2
 
-/-- The brackets of the source coordinates, as polynomials in the coordinates. -/
+/-- The brackets of the source coordinates, as polynomials in the coordinates. In FC's sign
+convention the `x, y, β` entries are the negatives of Long's Proposition 6.2, and in the notation
+of his Section 5 `{x, D₀} = A₃`, `{y, D₀} = −A₂` and `{β, D₀} = A₁`. -/
 noncomputable def brk : Fin 4 → Fin 4 → MvPolynomial (Fin 4) K :=
   ![![0, -X 0 ^ 3, 3 * X 0 ^ 2, C (1 / 2) * (1 + 3 * X 0 * Qs K)],
     ![X 0 ^ 3, 0, brkYB K, brkYD K],
