@@ -26,14 +26,18 @@ file's context (an `omit`, a second `variable`, a `universe`) changes the copied
 
 `Poisson2/Defs.lean` and `Poisson2/FormalTarget.lean` (which proves the statements under both
 namespaces) are checked textually too, as a regression check; Comparator is what guarantees that
-they agree with Challenge.lean.
+they agree with Challenge.lean. In `Poisson2/FormalTarget.lean` the script checks the four
+statements under each name, the whole of the file's context (`namespace`, `open`, `variable`,
+`universe`, ... lines), and the four `example`s that check in Lean that the two sets of names have
+the same statements at every universe level.
 
 Usage:
   check-fc-match.py [FC_CHECKOUT]   check; without an argument, download FC at FC_COMMIT
   check-fc-match.py --self-test [FC_CHECKOUT]
                                     check, then confirm that a list of altered Challenge files
                                     (changed universe, extra instance binder, shadowing
-                                    definitions, nested comments, ...) all fail
+                                    definitions, nested comments, ...) and altered FormalTarget
+                                    files all fail
 """
 import re
 import sys
@@ -112,6 +116,16 @@ def strip_comments(text):
     return "".join(out)
 
 
+def context_lines(code):
+    """The lines of comment-stripped `code` that can change what the declarations below mean."""
+    context = re.findall(
+        r"^(?:variable|universe|open|omit|include|section|namespace|end|set_option|local|scoped"
+        r"|attribute|instance|notation|infix|prefix|postfix|macro|syntax|noncomputable section)"
+        r"\b.*$",
+        code, re.M)
+    return [line.rstrip() for line in context]
+
+
 def check_fc_context(bracket, conjecture):
     """Check that nothing in Formal Conjectures' files changes the copied statements' context."""
     failures = []
@@ -120,12 +134,7 @@ def check_fc_context(bracket, conjecture):
                         "MvPolynomial` and its `variable` line directly")
     code = strip_comments(conjecture)
     last = code.index("theorem " + THEOREMS[-1])
-    context = re.findall(
-        r"^(?:variable|universe|open|omit|include|section|namespace|end|set_option|local|scoped"
-        r"|attribute|instance|notation|infix|prefix|postfix|macro|syntax|noncomputable section)"
-        r"\b.*$",
-        code[:last], re.M)
-    context = [line.rstrip() for line in context]
+    context = context_lines(code[:last])
     expected = [f"namespace {NAMESPACE}", "open MvPolynomial JacobianConjecture", VAR_K,
                 "variable (K) in"]
     scoped = [line for line in context if line.startswith("omit ") and line.endswith(" in")]
@@ -208,12 +217,48 @@ def check_regression(defs, target, bracket, conjecture):
                              (conjecture, "PoissonConjectureFor")]:
             if definition_block(text, name) != definition_block(source, name):
                 failures.append(f"{label}: definition {name} differs from Formal Conjectures")
+    code = strip_comments(target)
     for name in THEOREMS:
         # Once under Formal Conjectures' namespace and once under PALOMAR_NAMESPACE.
-        found = re.findall(r"theorem " + re.escape(name) + r"(?=[ \n]).*?:=", target, re.S)
+        found = re.findall(r"theorem " + re.escape(name) + r"(?=[ \n]).*?:=", code, re.S)
         if len(found) != 2 or any(s != theorem_statement(conjecture, name) for s in found):
             failures.append(f"Poisson2/FormalTarget.lean: statements of {name} differ")
+        if code.count(type_guard(name)) != 1:
+            failures.append(f"Poisson2/FormalTarget.lean: the `example` checking that both names "
+                            f"of {name} have the same statement is missing or changed")
+    expected = [f"namespace {NAMESPACE}", VAR_K, f"end {NAMESPACE}",
+                f"namespace {PALOMAR_NAMESPACE}", f"open {NAMESPACE}", VAR_K,
+                f"end {PALOMAR_NAMESPACE}", "section", "universe w", "end"]
+    if context_lines(code) != expected:
+        failures.append(f"Poisson2/FormalTarget.lean: the context of the statements changed: "
+                        f"{context_lines(code)}")
     return failures
+
+
+def type_guard(name):
+    """The `example` in FormalTarget.lean equating the types of `name` under both namespaces."""
+    return (f"example : type_of% @{NAMESPACE}.{name}.{{w}} =\n"
+            f"    type_of% @{PALOMAR_NAMESPACE}.{name}.{{w}} :=\n  rfl")
+
+
+def target_mutations(target):
+    """Altered FormalTarget files that must all fail. Each is (description, text)."""
+    guard = type_guard(THEOREMS[1])
+    cases = [
+        ("universe of K restricted for Formal Conjectures' names",
+         target.replace(VAR_K, VAR_K.replace("Type*", "Type"), 1)),
+        ("extra instance binder", target.replace(VAR_K + "\n", VAR_K + "\n\nvariable "
+                                                 "[DecidableEq K]\n", 1)),
+        ("type check commented out", target.replace(guard, "/-\n" + guard + "\n-/")),
+        ("type check at a fixed universe", target.replace(guard, guard.replace("{w}", "{0}"))),
+        ("set_option before the theorems", target.replace(
+            f"namespace {NAMESPACE}\n",
+            f"set_option autoImplicit true\n\nnamespace {NAMESPACE}\n")),
+    ]
+    for description, text in cases:
+        if text == target:
+            raise SystemExit(f"error: self-test mutation `{description}` did not apply")
+    return cases
 
 
 def mutations(challenge):
@@ -285,11 +330,14 @@ def main():
           f"nothing else (Formal Conjectures from {source})")
     if self_test:
         passed = [d for d, text in mutations(challenge) if not check_challenge(text, expected)]
+        passed += [f"FormalTarget: {d}" for d, text in target_mutations(target)
+                   if not check_regression(defs, text, bracket, conjecture)]
         if passed:
             print("self-test FAILED, these altered files passed: " + "; ".join(passed),
                   file=sys.stderr)
             raise SystemExit(1)
-        print(f"OK: self-test, all {len(mutations(challenge))} altered Challenge files fail")
+        print(f"OK: self-test, all {len(mutations(challenge))} altered Challenge files and all "
+              f"{len(target_mutations(target))} altered FormalTarget files fail")
 
 
 if __name__ == "__main__":

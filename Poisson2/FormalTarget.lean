@@ -18,7 +18,9 @@ public import Poisson2.Padding
 
 Palomar does not accept escaped name components such as `«math.0608009»` in theorem names, so
 `Challenge.lean` states the same four statements in the namespace `PoissonConjecture`, with
-Formal Conjectures' leaf names. They are proved here too, from the ones above.
+Formal Conjectures' leaf names. They are proved here too, from the ones above. The `example`s at
+the end check that the two sets of names have the same statements at every universe level, so
+Comparator's check of the `PoissonConjecture` names covers Formal Conjectures' names as well.
 -/
 
 @[expose] public section
@@ -72,3 +74,25 @@ theorem poisson_conjecture.variants.dimension_ge_two (n : ℕ) (hn : 2 ≤ n) :
   Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two n hn
 
 end PoissonConjecture
+
+section
+
+universe w
+
+example : type_of% @Arxiv.«math.0608009».poisson_conjecture.{w} =
+    type_of% @PoissonConjecture.poisson_conjecture.{w} :=
+  rfl
+
+example : type_of% @Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two.{w} =
+    type_of% @PoissonConjecture.poisson_conjecture.variants.dimension_two.{w} :=
+  rfl
+
+example : type_of% @Arxiv.«math.0608009».poisson_conjecture.variants.dimension_three.{w} =
+    type_of% @PoissonConjecture.poisson_conjecture.variants.dimension_three.{w} :=
+  rfl
+
+example : type_of% @Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two.{w} =
+    type_of% @PoissonConjecture.poisson_conjecture.variants.dimension_ge_two.{w} :=
+  rfl
+
+end

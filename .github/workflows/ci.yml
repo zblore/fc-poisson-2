@@ -1,6 +1,7 @@
-# Checks the proof the way Palomar does. The steps come from PalomarRegistry/PalomarTemplate.
-# lake comparator ships with the Lean toolchain and replays the proof through Lean's kernel,
-# nanoda and con-ron.
+# Checks the proof the way Palomar's template does. The steps come from
+# PalomarRegistry/PalomarTemplate. scripts/verify-comparator.sh runs lake comparator, which ships
+# with the Lean toolchain, and replays the proof through Lean's kernel, nanoda and con-ron.
+# Palomar's own pipeline is .github/workflows/palomar-preflight.yml.
 name: CI
 
 on:
