@@ -42,6 +42,34 @@ info: 'Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two' depe
 #print axioms Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two
 
 /--
+info: 'PoissonConjecture.poisson_conjecture' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms PoissonConjecture.poisson_conjecture
+
+/--
+info: 'PoissonConjecture.poisson_conjecture.variants.dimension_two' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms PoissonConjecture.poisson_conjecture.variants.dimension_two
+
+/--
+info: 'PoissonConjecture.poisson_conjecture.variants.dimension_three' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms PoissonConjecture.poisson_conjecture.variants.dimension_three
+
+/--
+info: 'PoissonConjecture.poisson_conjecture.variants.dimension_ge_two' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms PoissonConjecture.poisson_conjecture.variants.dimension_ge_two
+
+/--
 info: 'Poisson2.pderiv_aeval' depends on axioms:
   [propext, Classical.choice, Quot.sound]
 -/

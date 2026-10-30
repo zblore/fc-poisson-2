@@ -1,7 +1,7 @@
 {
   "challenge_module": "Challenge",
   "solution_module": "Solution",
-  "theorem_names": ["Arxiv.«math.0608009».poisson_conjecture", "Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two", "Arxiv.«math.0608009».poisson_conjecture.variants.dimension_three", "Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two"],
+  "theorem_names": ["PoissonConjecture.poisson_conjecture", "PoissonConjecture.poisson_conjecture.variants.dimension_two", "PoissonConjecture.poisson_conjecture.variants.dimension_three", "PoissonConjecture.poisson_conjecture.variants.dimension_ge_two"],
   "definition_names": [],
   "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
   "enable_nanoda": true

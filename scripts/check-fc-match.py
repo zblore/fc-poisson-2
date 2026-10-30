@@ -11,10 +11,12 @@ The check is a whitelist, not a search. Challenge.lean must consist of exactly:
 * `namespace MvPolynomial`, Formal Conjectures' `variable` line and its `poissonBracket`
   definition (docstring included), `end MvPolynomial`;
 * `namespace Arxiv.«math.0608009»`, `open MvPolynomial`, Formal Conjectures' `variable` line, its
-  `IsPoissonEndomorphism` and `PoissonConjectureFor` definitions;
-* Formal Conjectures' four theorem statements, in its order, each with an optional docstring and
-  the body `by sorry`;
-* `end Arxiv.«math.0608009»`.
+  `IsPoissonEndomorphism` and `PoissonConjectureFor` definitions, `end Arxiv.«math.0608009»`;
+* `namespace PoissonConjecture`, `open Arxiv.«math.0608009»`, the same `variable` line, Formal
+  Conjectures' four theorem statements, in its order, each with an optional docstring and the
+  body `by sorry`, and `end PoissonConjecture`. (Palomar rejects escaped name components such as
+  `«math.0608009»` in theorem names; the definitions keep their names, so the statements are the
+  same terms.)
 
 Each piece is compared character for character with Formal Conjectures at FC_COMMIT, and any other
 line (a `variable`, `universe`, `open`, `def`, `instance`, `set_option`, `notation`, `attribute`,
@@ -22,8 +24,9 @@ line (a `variable`, `universe`, `open`, `def`, `instance`, `set_option`, `notati
 expose code. The script also checks, on the Formal Conjectures side, that nothing in the source
 file's context (an `omit`, a second `variable`, a `universe`) changes the copied statements.
 
-`Poisson2/Defs.lean` and `Poisson2/FormalTarget.lean` are checked textually too, as a regression
-check; Comparator is what guarantees that they agree with Challenge.lean.
+`Poisson2/Defs.lean` and `Poisson2/FormalTarget.lean` (which proves the statements under both
+namespaces) are checked textually too, as a regression check; Comparator is what guarantees that
+they agree with Challenge.lean.
 
 Usage:
   check-fc-match.py [FC_CHECKOUT]   check; without an argument, download FC at FC_COMMIT
@@ -41,6 +44,9 @@ FC_COMMIT = "a6bf2bb646fc1926130c24781a3b3cf23d0ef288"
 BRACKET = "FormalConjecturesForMathlib/Algebra/MvPolynomial/PoissonBracket.lean"
 CONJECTURE = "FormalConjectures/Arxiv/math.0608009/PoissonConjecture.lean"
 NAMESPACE = "Arxiv.«math.0608009»"
+# Palomar rejects escaped name components such as «math.0608009» in theorem names, so
+# Challenge.lean states the theorems here, with Formal Conjectures' leaf names.
+PALOMAR_NAMESPACE = "PoissonConjecture"
 VAR_R = "variable {R σ : Type*} [CommRing R] [Fintype σ]"
 VAR_K = "variable {K : Type*} [Field K] [CharZero K]"
 THEOREMS = [
@@ -149,8 +155,12 @@ def expected_paragraphs(bracket, conjecture):
         VAR_K,
         definition_block(conjecture, "IsPoissonEndomorphism"),
         definition_block(conjecture, "PoissonConjectureFor"),
-        *[theorem(name) for name in THEOREMS],
         f"end {NAMESPACE}",
+        f"namespace {PALOMAR_NAMESPACE}",
+        f"open {NAMESPACE}",
+        VAR_K,
+        *[theorem(name) for name in THEOREMS],
+        f"end {PALOMAR_NAMESPACE}",
     ]
 
 
@@ -199,8 +209,10 @@ def check_regression(defs, target, bracket, conjecture):
             if definition_block(text, name) != definition_block(source, name):
                 failures.append(f"{label}: definition {name} differs from Formal Conjectures")
     for name in THEOREMS:
-        if theorem_statement(target, name) != theorem_statement(conjecture, name):
-            failures.append(f"Poisson2/FormalTarget.lean: statement of {name} differs")
+        # Once under Formal Conjectures' namespace and once under PALOMAR_NAMESPACE.
+        found = re.findall(r"theorem " + re.escape(name) + r"(?=[ \n]).*?:=", target, re.S)
+        if len(found) != 2 or any(s != theorem_statement(conjecture, name) for s in found):
+            failures.append(f"Poisson2/FormalTarget.lean: statements of {name} differ")
     return failures
 
 
@@ -235,6 +247,13 @@ def mutations(challenge):
         ("proof other than sorry", challenge.replace("¬ PoissonConjectureFor K 3 := by\n  sorry",
                                                      "¬ PoissonConjectureFor K 3 := by\n  "
                                                      "exact sorry")),
+        ("local definition before the theorems", challenge.replace(
+            f"open {NAMESPACE}\n", f"open {NAMESPACE}\n\ndef PoissonConjectureFor (K : Type*) "
+                                   "(n : ℕ) : Prop := True\n")),
+        ("open Classical before the theorems", challenge.replace(
+            f"open {NAMESPACE}\n", f"open {NAMESPACE} Classical\n")),
+        ("theorems in another namespace", challenge.replace(
+            f"namespace {PALOMAR_NAMESPACE}\n", f"namespace {PALOMAR_NAMESPACE}.Other\n")),
         ("theorem dropped", re.sub(r"\n\n/-- \*\*The Poisson conjecture is false in dimension "
                                    r"`3`.*?sorry", "", challenge, flags=re.S)),
     ]

@@ -27,7 +27,7 @@ that, over a field `K` of characteristic zero, every endomorphism of the `n`-th 
 algebra is an automorphism. The canonical Poisson algebra is the polynomial algebra in the `2n`
 variables `X (Sum.inl i)` and `X (Sum.inr i)`, with bracket `{X (Sum.inl i), X (Sum.inr i)} = 1`.
 
-The four statements are Formal Conjectures' statements, with Formal Conjectures' names:
+The four statements are Formal Conjectures' statements, with Formal Conjectures' leaf names:
 
 * `poisson_conjecture.variants.dimension_two`: $PC_2$ is false (C. D. Long, arXiv:2608.23777);
 * `poisson_conjecture.variants.dimension_ge_two`: $PC_n$ is false for every `n ≥ 2`;
@@ -38,7 +38,12 @@ The three definitions below are copied verbatim from Formal Conjectures
 (`google-deepmind/formal-conjectures`, commit `a6bf2bb646fc1926130c24781a3b3cf23d0ef288`):
 `MvPolynomial.poissonBracket` from
 `FormalConjecturesForMathlib/Algebra/MvPolynomial/PoissonBracket.lean`, and the other two from
-`FormalConjectures/Arxiv/math.0608009/PoissonConjecture.lean`, as are the four statements.
+`FormalConjectures/Arxiv/math.0608009/PoissonConjecture.lean`, as is the text of the four
+statements. Formal Conjectures states them in the namespace `Arxiv.«math.0608009»`, but Palomar
+does not accept escaped name components such as `«math.0608009»` in theorem names, so here they
+are stated in the namespace `PoissonConjecture`. The definitions keep their Formal Conjectures
+names, so the statements are the same terms. `Solution` also proves them under Formal
+Conjectures' own names.
 -/
 
 @[expose] public section
@@ -81,6 +86,14 @@ def PoissonConjectureFor (n : ℕ) : Prop :=
   ∀ φ : MvPolynomial (Fin n ⊕ Fin n) K →ₐ[K] MvPolynomial (Fin n ⊕ Fin n) K,
     IsPoissonEndomorphism φ → Function.Bijective φ
 
+end Arxiv.«math.0608009»
+
+namespace PoissonConjecture
+
+open Arxiv.«math.0608009»
+
+variable {K : Type*} [Field K] [CharZero K]
+
 /-- **The Poisson conjecture is false.** -/
 theorem poisson_conjecture : ¬ ∀ n, PoissonConjectureFor K n := by
   sorry
@@ -98,4 +111,4 @@ theorem poisson_conjecture.variants.dimension_ge_two (n : ℕ) (hn : 2 ≤ n) :
     ¬ PoissonConjectureFor K n := by
   sorry
 
-end Arxiv.«math.0608009»
+end PoissonConjecture

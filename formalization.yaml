@@ -40,10 +40,15 @@ related_formalizations:
       `poisson_conjecture.variants.dimension_ge_two`, and the three definitions they use
       (`MvPolynomial.poissonBracket` comes from
       FormalConjecturesForMathlib/Algebra/MvPolynomial/PoissonBracket.lean). Challenge.lean and
-      Poisson2/Defs.lean copy the definitions verbatim, and Challenge.lean copies the statements
-      with the same names; scripts/check-fc-match.py checks this against Formal Conjectures at
-      that commit. The basic bracket lemmas in Poisson2/Bracket.lean are copied from the same
-      file, with one deprecated lemma name replaced. An earlier version of this repository
+      Poisson2/Defs.lean copy the definitions verbatim, with their names, and Challenge.lean
+      copies the statements; scripts/check-fc-match.py checks this against Formal Conjectures at
+      that commit. Palomar does not accept escaped name components such as «math.0608009» in
+      theorem names, so Challenge.lean states the four theorems in the namespace
+      PoissonConjecture, with Formal Conjectures' leaf names (for example
+      PoissonConjecture.poisson_conjecture.variants.dimension_two); Solution proves them under
+      both these names and Formal Conjectures' own. The basic bracket lemmas in
+      Poisson2/Bracket.lean are copied from the same file, with one deprecated lemma name
+      replaced. An earlier version of this repository
       (commit d464ff4) depended on Formal Conjectures directly and was linked from Formal
       Conjectures PR #7657.
 
@@ -83,8 +88,10 @@ review:
     Claude Fable 5.1, October 2026; not published) found none in the earlier version, whose
     proofs this version keeps: the port changed module headers and imports, deprecated lemma
     names, one simp set and one rewrite step, and restated Poisson2/FormalTarget.lean under
-    Formal Conjectures' names. A Lean proof over the rationals was reported in Formal
-    Conjectures PR #5451; the PR neither includes nor links it, and I could not find it.
+    Formal Conjectures' names. All five reviews predate the move of Challenge.lean's theorems to
+    the namespace PoissonConjecture, which changed only their names. A Lean proof over the
+    rationals was reported in Formal Conjectures PR #5451; the PR neither includes nor links
+    it, and I could not find it.
 
 status:
   scope: >-
@@ -153,6 +160,7 @@ fidelity:
 alignment:
   namespaces:
     - "Arxiv.«math.0608009»"
+    - "PoissonConjecture"
     - "Poisson2"
   statements:
     - source: "Formal Conjectures, poisson_conjecture.variants.dimension_two"

@@ -1,6 +1,6 @@
 # The Poisson conjecture is false: a Lean proof
 
-A Lean 4 proof that the Poisson conjecture fails for two canonical pairs, and hence for every number of pairs from two up. It proves four statements from the file `Arxiv/math.0608009/PoissonConjecture.lean` in Google DeepMind's [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures), with their names and against their own definitions:
+A Lean 4 proof that the Poisson conjecture fails for two canonical pairs, and hence for every number of pairs from two up. It proves four statements from the file `Arxiv/math.0608009/PoissonConjecture.lean` in Google DeepMind's [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures), against their own definitions and under their own names:
 
 - `poisson_conjecture.variants.dimension_two`;
 - `poisson_conjecture.variants.dimension_three`, as the case n = 3 of the next one;
@@ -27,7 +27,7 @@ The proof follows Long's own route.
 
 The files:
 
-- `Challenge.lean`: the four statements, for Palomar. It imports only Mathlib, so the three definitions they use are copied into it from Formal Conjectures, word for word.
+- `Challenge.lean`: the four statements, for Palomar. It imports only Mathlib, so the three definitions they use are copied into it from Formal Conjectures, word for word. Palomar does not accept names like `Arxiv.«math.0608009».poisson_conjecture`, with its escaped `«math.0608009»`, so the theorems are stated in the namespace `PoissonConjecture`, with the same leaf names. The definitions keep Formal Conjectures' names, so the statements are the same. `Solution` proves them under both names.
 - `Solution.lean`: imports the proof.
 - `Poisson2/Defs.lean`: the same three definitions, copied from Formal Conjectures.
 - `Poisson2/Bracket.lean`: basic lemmas about the bracket, copied from Formal Conjectures.
