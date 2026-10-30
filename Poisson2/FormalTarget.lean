@@ -3,7 +3,9 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
-import Poisson2.Padding
+module
+
+public import Poisson2.Padding
 
 /-!
 # The Formal Conjectures statements
@@ -11,51 +13,33 @@ import Poisson2.Padding
 `Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two`,
 `Arxiv.«math.0608009».poisson_conjecture.variants.dimension_three`,
 `Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two` and
-`Arxiv.«math.0608009».poisson_conjecture`, with Formal Conjectures' own hypotheses
-(`{K : Type*} [Field K] [CharZero K]`). The `example`s check that the statements proved here
-are definitionally the statements in Formal Conjectures (pinned in `lakefile.toml`).
+`Arxiv.«math.0608009».poisson_conjecture`, with Formal Conjectures' names, binders and statements
+(`{K : Type*} [Field K] [CharZero K]`). These are the statements of `Challenge.lean`.
 -/
 
-universe w
+@[expose] public section
 
-namespace Poisson2
+namespace Arxiv.«math.0608009»
 
-open Arxiv.«math.0608009»
+variable {K : Type*} [Field K] [CharZero K]
 
-/-- Formal Conjectures' `poisson_conjecture.variants.dimension_two`. -/
-theorem fc_dimension_two {K : Type*} [Field K] [CharZero K] : ¬ PoissonConjectureFor K 2 :=
-  dimension_two K
+/-- **The Poisson conjecture is false.** -/
+theorem poisson_conjecture : ¬ ∀ n, PoissonConjectureFor K n :=
+  Poisson2.poisson_conjecture K
 
-/-- Formal Conjectures' `poisson_conjecture.variants.dimension_ge_two`. -/
-theorem fc_dimension_ge_two {K : Type*} [Field K] [CharZero K] (n : ℕ) (hn : 2 ≤ n) :
+/-- **The Poisson conjecture is false in dimension `2`** (Long 2026). -/
+theorem poisson_conjecture.variants.dimension_two : ¬ PoissonConjectureFor K 2 :=
+  Poisson2.dimension_two K
+
+/-- **The Poisson conjecture is false in dimension `3`**: the case `n = 3` of `dimension_ge_two`.
+(Formal Conjectures' docstring sketches a different proof, by the cotangent lift of Alpöge's
+Jacobian counterexample.) -/
+theorem poisson_conjecture.variants.dimension_three : ¬ PoissonConjectureFor K 3 :=
+  Poisson2.dimension_ge_two K 3 (by norm_num)
+
+/-- **The Poisson conjecture is false in every dimension `n ≥ 2`.** -/
+theorem poisson_conjecture.variants.dimension_ge_two (n : ℕ) (hn : 2 ≤ n) :
     ¬ PoissonConjectureFor K n :=
-  dimension_ge_two K n hn
+  Poisson2.dimension_ge_two K n hn
 
-/-- Formal Conjectures' `poisson_conjecture.variants.dimension_three`: the case `n = 3` of
-`dimension_ge_two`. (Formal Conjectures' docstring sketches a different proof, by the cotangent lift
-of Alpöge's Jacobian counterexample.) -/
-theorem fc_dimension_three {K : Type*} [Field K] [CharZero K] : ¬ PoissonConjectureFor K 3 :=
-  fc_dimension_ge_two 3 (by norm_num)
-
-/-- Formal Conjectures' `poisson_conjecture`. -/
-theorem fc_poisson_conjecture {K : Type*} [Field K] [CharZero K] :
-    ¬ ∀ n, PoissonConjectureFor K n :=
-  poisson_conjecture K
-
-example : type_of% @fc_dimension_two.{w} =
-    type_of% @poisson_conjecture.variants.dimension_two.{w} :=
-  rfl
-
-example : type_of% @fc_dimension_three.{w} =
-    type_of% @poisson_conjecture.variants.dimension_three.{w} :=
-  rfl
-
-example : type_of% @fc_dimension_ge_two.{w} =
-    type_of% @poisson_conjecture.variants.dimension_ge_two.{w} :=
-  rfl
-
-example : type_of% @fc_poisson_conjecture.{w} =
-    type_of% @Arxiv.«math.0608009».poisson_conjecture.{w} :=
-  rfl
-
-end Poisson2
+end Arxiv.«math.0608009»

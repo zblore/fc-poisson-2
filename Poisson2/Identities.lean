@@ -3,7 +3,9 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
-import Poisson2.Coordinates
+module
+
+public import Poisson2.Coordinates
 
 /-!
 # Long's four polynomials and their brackets
@@ -20,6 +22,8 @@ variables `X 0, X 1, X 2, X 3 = x, y, β, D₀` of `Poisson2.Coordinates`, with 
 The six identities below are Long's Theorem 5.2 in FC's sign convention, in which
 `{R, D} = {T, S} = 1`.
 -/
+
+@[expose] public section
 
 namespace Poisson2
 

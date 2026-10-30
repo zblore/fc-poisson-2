@@ -3,6 +3,8 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
+module
+
 import Poisson2
 
 /-!
@@ -11,34 +13,44 @@ import Poisson2
 Fails if any main result comes to depend on anything beyond Lean's three standard axioms.
 -/
 
-/-- info: 'Poisson2.fc_dimension_two' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
-#print axioms Poisson2.fc_dimension_two
+/--
+info: 'Arxiv.«math.0608009».poisson_conjecture' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
+#print axioms Arxiv.«math.0608009».poisson_conjecture
 
 /--
-info: 'Poisson2.fc_dimension_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
-#print axioms Poisson2.fc_dimension_three
+#guard_msgs (whitespace := lax) in
+#print axioms Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two
 
 /--
-info: 'Poisson2.fc_dimension_ge_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'Arxiv.«math.0608009».poisson_conjecture.variants.dimension_three' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
-#print axioms Poisson2.fc_dimension_ge_two
+#guard_msgs (whitespace := lax) in
+#print axioms Arxiv.«math.0608009».poisson_conjecture.variants.dimension_three
 
 /--
-info: 'Poisson2.fc_poisson_conjecture' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
-#print axioms Poisson2.fc_poisson_conjecture
+#guard_msgs (whitespace := lax) in
+#print axioms Arxiv.«math.0608009».poisson_conjecture.variants.dimension_ge_two
 
-/-- info: 'Poisson2.pderiv_aeval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/--
+info: 'Poisson2.pderiv_aeval' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs (whitespace := lax) in
 #print axioms Poisson2.pderiv_aeval
 
 /--
-info: 'Poisson2.poissonBracket_rename' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'Poisson2.poissonBracket_rename' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
+#guard_msgs (whitespace := lax) in
 #print axioms Poisson2.poissonBracket_rename

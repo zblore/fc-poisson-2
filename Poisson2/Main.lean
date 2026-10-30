@@ -3,7 +3,9 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
-import Poisson2.Identities
+module
+
+public import Poisson2.Identities
 
 /-!
 # The rank-two Poisson conjecture is false
@@ -23,6 +25,8 @@ The statements `dimension_two` and `poisson_conjecture` are Formal Conjectures'
 `Arxiv.«math.0608009».poisson_conjecture`, up to `K` being explicit here; the exact restatements
 are in `Poisson2.FormalTarget`.
 -/
+
+@[expose] public section
 
 namespace Poisson2
 

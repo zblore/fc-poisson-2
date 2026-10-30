@@ -1,6 +1,6 @@
 # The Poisson conjecture is false: a Lean proof
 
-A Lean 4 proof that the Poisson conjecture fails for two canonical pairs, and hence for every number of pairs from two up. It proves four statements from the file `Arxiv/math.0608009/PoissonConjecture.lean` in Google DeepMind's [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures), against their own definitions:
+A Lean 4 proof that the Poisson conjecture fails for two canonical pairs, and hence for every number of pairs from two up. It proves four statements from the file `Arxiv/math.0608009/PoissonConjecture.lean` in Google DeepMind's [Formal Conjectures](https://github.com/google-deepmind/formal-conjectures), with their names and against their own definitions:
 
 - `poisson_conjecture.variants.dimension_two`;
 - `poisson_conjecture.variants.dimension_three`, as the case n = 3 of the next one;
@@ -27,6 +27,10 @@ The proof follows Long's own route.
 
 The files:
 
+- `Challenge.lean`: the four statements, for Palomar. It imports only Mathlib, so the three definitions they use are copied into it from Formal Conjectures, word for word.
+- `Solution.lean`: imports the proof.
+- `Poisson2/Defs.lean`: the same three definitions, copied from Formal Conjectures.
+- `Poisson2/Bracket.lean`: basic lemmas about the bracket, copied from Formal Conjectures.
 - `Poisson2/ChainRule.lean`: the chain rule and the bracket of substitutions.
 - `Poisson2/Coordinates.lean`: Long's coordinates and their bracket table.
 - `Poisson2/Identities.lean`: R, T, D, S and the six identities.
@@ -34,20 +38,23 @@ The files:
 - `Poisson2/Padding.lean`: renaming along canonical pairs, and the padding to any n ≥ 2.
 - `Poisson2/FormalTarget.lean`: the four Formal Conjectures statements.
 
-Each statement in `FormalTarget.lean` is checked by `rfl` to have exactly the type of the Formal Conjectures declaration. `audit/Axioms.lean` checks that the proofs use only `propext`, `Classical.choice` and `Quot.sound`, and it fails if that ever changes. `audit/Control.lean` checks that the audit would catch a `sorry` (Formal Conjectures' own unproved declaration reports `sorryAx`), specialises the result to the rationals, and checks the bracket sign and Long's common image (0, 1/8, 0, 0).
+`lake comparator` checks that `Solution` proves exactly the statements of `Challenge.lean`, with the same definitions, and replays the proof through Lean's kernel, nanoda and con-ron. CI runs it through `scripts/verify-comparator.sh`, from Palomar's template; `.github/workflows/palomar-preflight.yml` runs Palomar's own pipeline on a chosen commit. `scripts/check-fc-match.py` checks the other link: that `Challenge.lean` is Formal Conjectures' three definitions and four statements, character for character, and nothing else. With `--self-test` it also checks that altered copies of `Challenge.lean` (a changed universe, an extra hypothesis, a shadowing definition, and others) fail. `audit/Axioms.lean` checks that the proofs use only `propext`, `Classical.choice` and `Quot.sound`, and it fails if that ever changes. `audit/Control.lean` checks that the audit would catch a `sorry` (an unproved statement reports `sorryAx`), specialises the result to the rationals, and checks the bracket sign and Long's common image (0, 1/8, 0, 0).
 
 ## Building
 
-It needs Lean v4.33.1 and depends on Formal Conjectures at commit `09215996`.
+It needs Lean v4.35.0-rc3 and Mathlib at commit `5e0c4e52`.
 
 ```
 lake exe cache get
 lake build
 lake env lean audit/Axioms.lean
 lake env lean audit/Control.lean
+python3 scripts/check-fc-match.py --self-test
 ```
 
-A fresh build first compiles the parts of Formal Conjectures that it uses. After that the whole library builds in a few minutes.
+The whole library builds in a few minutes. `scripts/verify-comparator.sh` runs `lake comparator` as Palomar's template does; it needs Linux, for its sandbox.
+
+An earlier version (commit `d464ff4`) depended on Formal Conjectures directly, on Lean v4.33.1. This version has the same proofs, ported to Palomar's layout.
 
 ## How it was made
 

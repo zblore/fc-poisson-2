@@ -3,13 +3,15 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
-import Poisson2
+module
+
+public import Poisson2
 
 /-!
 # Controls
 
-* The axiom audit would catch a `sorry`: Formal Conjectures' own declaration of the same
-  statement is unproved, and `#print axioms` reports `sorryAx` for it.
+* The axiom audit would catch a `sorry`: `#print axioms` reports `sorryAx` for an unproved
+  statement.
 * The result specialises to the rationals.
 * FC's bracket has `{X₁, X₃} = 1`, the sign the docstrings assume.
 * Long's two points have the common image `(R, T, D, S) = (0, 1/8, 0, 0)` (his Theorem 1.1).
@@ -17,16 +19,15 @@ import Poisson2
 
 open MvPolynomial Arxiv.«math.0608009» Poisson2
 
-/--
-info: 'Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two' depends on axioms: [propext,
- sorryAx,
- Classical.choice,
- Quot.sound]
--/
-#guard_msgs in
-#print axioms Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two
+public theorem unproved : ¬ Arxiv.«math.0608009».PoissonConjectureFor ℚ 1 := by
+  sorry
 
-example : ¬ PoissonConjectureFor ℚ 2 := fc_dimension_two
+/-- info: 'unproved' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms unproved
+
+example : ¬ PoissonConjectureFor ℚ 2 :=
+  Arxiv.«math.0608009».poisson_conjecture.variants.dimension_two
 
 example : poissonBracket (X (Sum.inl 0) : MvPolynomial (Fin 2 ⊕ Fin 2) ℚ) (X (Sum.inr 0)) = 1 := by
   simp

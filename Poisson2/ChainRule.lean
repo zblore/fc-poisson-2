@@ -3,7 +3,9 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
-import FormalConjectures.Arxiv.«math.0608009».PoissonConjecture
+module
+
+public import Poisson2.Bracket
 
 /-!
 # Chain rules for substitution
@@ -13,6 +15,8 @@ substitution `aeval u F` are given by the chain rule (`pderiv_aeval`). Consequen
 Poisson bracket of two substitutions is determined by the brackets of the `u j`
 (`poissonBracket_aeval`): it is the bracket "in the coordinates `u`".
 -/
+
+@[expose] public section
 
 namespace Poisson2
 
@@ -31,7 +35,7 @@ theorem pderiv_aeval [Fintype τ] (u : τ → MvPolynomial σ R) (F : MvPolynomi
     simp only [map_mul, aeval_X, Derivation.leibniz, smul_eq_mul, hp, pderiv_X, map_add,
       add_mul, Finset.sum_add_distrib, Finset.mul_sum, Pi.single_apply, apply_ite (aeval u),
       map_zero, mul_ite, ite_mul, mul_one, mul_zero, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     congr 1
     exact Finset.sum_congr rfl fun j _ => by ring
 

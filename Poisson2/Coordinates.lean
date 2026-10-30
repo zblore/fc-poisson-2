@@ -3,7 +3,11 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
-import Poisson2.ChainRule
+module
+
+public import Poisson2.ChainRule
+public import Mathlib.Algebra.CharZero.Infinite
+public import Mathlib.Algebra.MvPolynomial.Funext
 
 /-!
 # Long's source coordinates and their brackets
@@ -19,6 +23,8 @@ is FC's `poissonBracket`.
 The main result of this file, `poissonBracket_coord`, gives the brackets of the four coordinates
 as polynomials in the coordinates themselves, with `Q = y + xβ/3` (which equals `q`).
 -/
+
+@[expose] public section
 
 namespace Poisson2
 
@@ -103,7 +109,8 @@ theorem poissonBracket_coord (j l : Fin 4) :
       Derivation.leibniz_pow, map_add, map_sub, map_neg, pderiv_X, pderiv_C, pderiv_ofNat,
       Derivation.map_one_eq_zero, Pi.single_apply, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq,
       Fin.isValue, ↓reduceIte, smul_eq_mul, nsmul_eq_mul, mul_zero, zero_mul, mul_one, add_zero,
-      zero_add, sub_zero, zero_sub, neg_zero, Nat.cast_ofNat, Nat.cast_one]
+      zero_add, sub_zero, zero_sub, neg_zero, Nat.cast_ofNat, Nat.cast_one, Nat.reduceSub,
+      pow_one]
     try
       apply MvPolynomial.funext
       intro e

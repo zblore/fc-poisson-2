@@ -3,7 +3,9 @@ Copyright (c) 2026 Zayn Blore. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zayn Blore
 -/
-import Poisson2.Main
+module
+
+public import Poisson2.Main
 
 /-!
 # Padding: the Poisson conjecture fails for every `n ≥ 2`
@@ -19,6 +21,8 @@ of `e` act by `φ` (after renaming the variables), and elsewhere act as the iden
 With `Fin 2 ↪ Fin n` and Long's map this proves Formal Conjectures'
 `poisson_conjecture.variants.dimension_ge_two` (Long, Corollary 8.1).
 -/
+
+@[expose] public section
 
 namespace Poisson2
 
@@ -107,11 +111,11 @@ noncomputable def padImg (v : τ ⊕ τ) : MvPolynomial (τ ⊕ τ) K :=
 theorem padImg_pairMap (w : σ ⊕ σ) :
     padImg e φ (pairMap e w) = rename (pairMap e) (φ (X w)) := by
   have h : pairMap e w ∈ Set.range (pairMap e) := ⟨w, rfl⟩
-  rw [padImg, dif_pos h, pairMap_injective e h.choose_spec]
+  rw [padImg, dite_eq_left h, pairMap_injective e h.choose_spec]
 
 theorem padImg_of_notMem {v : τ ⊕ τ} (hv : v ∉ Set.range (pairMap e)) :
     padImg e φ v = X v :=
-  dif_neg hv
+  dite_eq_right hv
 
 /-- The padded map preserves the canonical bracket on generators. -/
 theorem padImg_bracket [Fintype σ] [Fintype τ]
@@ -141,11 +145,11 @@ noncomputable def retract : MvPolynomial (τ ⊕ τ) K →ₐ[K] MvPolynomial (�
 theorem retract_X_pairMap (w : σ ⊕ σ) :
     retract (K := K) e (X (pairMap e w)) = X w := by
   have h : pairMap e w ∈ Set.range (pairMap e) := ⟨w, rfl⟩
-  rw [retract, aeval_X, dif_pos h, pairMap_injective e h.choose_spec]
+  rw [retract, aeval_X, dite_eq_left h, pairMap_injective e h.choose_spec]
 
 theorem retract_X_of_notMem {v : τ ⊕ τ} (hv : v ∉ Set.range (pairMap e)) :
     retract (K := K) e (X v) = 0 := by
-  rw [retract, aeval_X, dif_neg hv]
+  rw [retract, aeval_X, dite_eq_right hv]
 
 theorem retract_rename (p : MvPolynomial (σ ⊕ σ) K) : retract e (rename (pairMap e) p) = p := by
   have : (retract e).comp (rename (pairMap e)) = AlgHom.id K (MvPolynomial (σ ⊕ σ) K) := by
